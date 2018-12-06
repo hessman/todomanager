@@ -1,5 +1,42 @@
 extends layout
 
 block content
-    h1= title
-    p #{todos}
+    h1 Todo Manager
+
+    form(action='/todos/add' method='GET')
+        button(type='submit') add
+
+    form(action='/todos' method='GET')
+
+        select(name='completion')
+
+            if filterCompletion === 'todo'
+                option(value='todo' selected='selected') todo
+            else 
+                option(value='todo') todo
+
+            if filterCompletion === 'in progress'
+                option(value='in progress' selected='selected') in progress
+            else 
+                option(value='in progress') in progress
+
+            if filterCompletion === 'done'
+                option(value='done' selected='selected') done
+            else 
+                option(value='done') done
+
+        button(type='submit') filter
+    
+    ul 
+        each todo in todos
+            li id : #{todo.id}  
+                br 
+                | message : #{todo.message} 
+                br 
+                | completion : #{todo.completion}
+            form(action='/todos/' + todo.id + '?_method=DELETE' method='POST')
+                button(type='submit') delete
+            form(action='/todos/' + todo.id method='GET')
+                button(type='submit') show
+            br
+    

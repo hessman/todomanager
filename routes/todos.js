@@ -2,6 +2,7 @@ const express = require("express")
 const router  = express.Router()
 const db = require('../models')
 
+//Post routes
 router.post("/", async (req, res, next) => {
 
     try {
@@ -15,7 +16,7 @@ router.post("/", async (req, res, next) => {
         res.format({
 
             text: function(){
-                res.send(JSON.stringify(todo));
+                res.send(JSON.stringify(todo))
             },
           
             html: function(){
@@ -32,10 +33,30 @@ router.post("/", async (req, res, next) => {
     }
 })
 
+//Get routes
 router.get("/add", async (req, res, next) => {
-    res.render("todo_add", { 
-        title: "Add a todo list", 
+    res.render("todo_form", { 
+        title: "Add a todo list",
+        method: "POST"
     })
+})
+
+router.get("/:todoId/edit", async (req, res, next) => {
+
+    try {
+
+        const todo = await db.todos.findByPk(req.params.todoId)
+
+        res.render("todo_form", { 
+            title: "Add a todo list",
+            todo: todo,
+            method: "PATCH"
+        })
+
+    } catch (Err) {
+        next(Err)
+    }
+    
 })
 
 router.get("/:todoId", async (req, res, next) => {
@@ -47,13 +68,12 @@ router.get("/:todoId", async (req, res, next) => {
         res.format({
 
             text: function(){
-                res.send(JSON.stringify(todo));
+                res.send(JSON.stringify(todo))
             },
           
             html: function(){
-                res.render("todo", { 
-                    title: "TODO GET", 
-                    todo: JSON.stringify(todo)
+                res.render("show", {  
+                    todo: todo
                 })
             },
           
@@ -84,21 +104,24 @@ router.get("/", async (req, res, next) => {
 
         if (req.query.completion) {
             options.where = { completion : req.query.completion }
+            filterCompletion = req.query.completion
+        } else {
+            filterCompletion = "todo"
         }
-
+        console.log(filterCompletion)
         const todos = await db.todos.findAndCountAll(options)
 
         res.format({
 
             text: function(){
-                res.send(JSON.stringify(todos.rows));
+                res.send(JSON.stringify(todos.rows))
             },
           
             html: function(){
                 res.render("todos", { 
-                    title: "TODOS GET", 
                     count: todos.count,
-                    todos: JSON.stringify(todos.rows)
+                    todos: todos.rows,
+                    filterCompletion: filterCompletion
                 })
             },
           

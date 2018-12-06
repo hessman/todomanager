@@ -1,11 +1,12 @@
-const cookieParser  = require("cookie-parser")
-const createError   = require("http-errors")
-const express       = require("express")
-const logger        = require("morgan")
-const path          = require("path")
+const methodOverride = require('method-override')
+const cookieParser   = require("cookie-parser")
+const createError    = require("http-errors")
+const express        = require("express")
+const logger         = require("morgan")
+const path           = require("path")
 
-const indexRouter   = require("./routes/index")
-const todosRouter   = require("./routes/todos")
+const indexRouter    = require("./routes/index")
+const todosRouter    = require("./routes/todos")
 
 const app = express()
 
@@ -17,6 +18,8 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
 app.use(cookieParser())
 app.use(express.static(path.join(__dirname, "assets")))
+
+app.use(methodOverride('_method'))
 
 app.use("/", indexRouter)
 app.use("/todos", todosRouter)
