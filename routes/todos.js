@@ -151,7 +151,7 @@ router.delete("/:todoId", async (req, res, next) => {
         res.format({
 
             text: function(){
-                res.send(JSON.stringify(result));
+                res.send(JSON.stringify(result))
             },
           
             html: function(){
@@ -189,7 +189,7 @@ router.patch("/:todoId", async (req, res, next) => {
         res.format({
 
             text: function(){
-                res.send(JSON.stringify(result));
+                res.send(JSON.stringify(result))
             },
           
             html: function(){
