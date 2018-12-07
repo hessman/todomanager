@@ -1,6 +1,6 @@
 const express = require("express")
 const router  = express.Router()
-const db = require('../models')
+const db      = require('../models')
 
 //Post routes
 router.post("/", async (req, res, next) => {
@@ -135,6 +135,7 @@ router.get("/", async (req, res, next) => {
     }
 })
 
+// Delete routes
 router.delete("/:todoId", async (req, res, next) => {
 
     try {
@@ -168,6 +169,7 @@ router.delete("/:todoId", async (req, res, next) => {
     }
 })
 
+// Patch routes
 router.patch("/:todoId", async (req, res, next) => {
 
     try {

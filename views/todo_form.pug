@@ -11,8 +11,9 @@ block content
                 input(type='text', name='message', value='')
                 br
                 | completion : 
+
                 select(name='completion')
-                    option(value='todo') todo
+                    option(value='todo' selected) todo
                     option(value='in progress') in progress
                     option(value='done') done
             input(type='submit', value='submit')
@@ -25,8 +26,22 @@ block content
                 input(type='text', name='message', value=todo.message)
                 br
                 | completion : 
+
                 select(name='completion')
-                    option(value='todo') todo
-                    option(value='in progress') in progress
-                    option(value='done') done
+
+                    if todo.completion === 'todo'
+                        option(value='todo' selected) todo
+                    else 
+                        option(value='todo') todo
+
+                    if todo.completion === 'in progress'
+                        option(value='in progress' selected) in progress
+                    else 
+                        option(value='in progress') in progress
+
+                    if todo.completion === 'done'
+                        option(value='done' selected) done
+                    else 
+                        option(value='done') done
+
             input(type='submit', value='update')
