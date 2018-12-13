@@ -5,7 +5,8 @@ module.exports = (sequelize, DataTypes) => {
     completion: DataTypes.STRING
   }, {});
   todos.associate = function(models) {
-    // associations can be defined here
+    todos.belongsToMany(models.users, { through: 'users_todos', foreignKey: 'todoId' })
+    todos.belongsToMany(models.teams, { through: 'teams_todos', foreignKey: 'todoId' })
   };
   return todos;
 };
