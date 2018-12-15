@@ -1,5 +1,5 @@
 # TODO MANAGER
 
-NodeJS TP
+NodeJS Exercice
 
-Creation of a simple MVC todo list manager.
+Creation of a simple MVC todo list manager with no client-side javascript.
