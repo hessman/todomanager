@@ -2,19 +2,25 @@ const express = require("express")
 const router  = express.Router()
 const db      = require('../models')
 
+const validCompletionStatus = ["todo", "in progress", "done"]
+
 //Post routes
 router.post("/", async (req, res, next) => {
 
     try {
 
-        const todo = await db.todos
+        let completion = validCompletionStatus.includes(req.body.completion) ? req.body.completion : "todo"
+        let title = req.body.title ? req.body.title : "no title"
+        let description = req.body.description ? req.body.description : "no description"
+
+        const todo = await db.Todo
         .create({
-            message: req.body.message, 
-            completion: req.body.completion 
+            title: title, 
+            description: description, 
+            completion: completion 
         })
 
         res.format({
-
             text: function(){
                 res.send(JSON.stringify(todo))
             },
@@ -35,9 +41,10 @@ router.post("/", async (req, res, next) => {
 
 //Get routes
 router.get("/add", async (req, res, next) => {
-    res.render("todo_form", { 
+
+    res.render("todo/form", { 
         title: "Add a todo list",
-        method: "POST"
+        isNew : true
     })
 })
 
@@ -45,12 +52,12 @@ router.get("/:todoId/edit", async (req, res, next) => {
 
     try {
 
-        const todo = await db.todos.findByPk(req.params.todoId)
+        const todo = await db.Todo.findByPk(req.params.todoId)
 
-        res.render("todo_form", { 
+        res.render("todo/form", { 
             title: "Add a todo list",
             todo: todo,
-            method: "PATCH"
+            isNew: false
         })
 
     } catch (Err) {
@@ -63,16 +70,15 @@ router.get("/:todoId", async (req, res, next) => {
 
     try {
 
-        const todo = await db.todos.findByPk(req.params.todoId)
+        const todo = await db.Todo.findByPk(req.params.todoId)
 
         res.format({
-
             text: function(){
                 res.send(JSON.stringify(todo))
             },
           
             html: function(){
-                res.render("show", {  
+                res.render("todo/show", {  
                     todo: todo
                 })
             },
@@ -94,31 +100,27 @@ router.get("/", async (req, res, next) => {
         let options = {}
 
         if (req.query.limit) {
-
             req.query.offset = req.query.offset ? req.query.offset : 0
 
             options.limit = req.query.limit
             options.offset = req.query.offset
-            
         }
-
         if (req.query.completion) {
             options.where = { completion : req.query.completion }
             filterCompletion = req.query.completion
         } else {
             filterCompletion = "todo"
         }
-        console.log(filterCompletion)
-        const todos = await db.todos.findAndCountAll(options)
+
+        const todos = await db.Todo.findAndCountAll(options)
 
         res.format({
-
             text: function(){
                 res.send(JSON.stringify(todos.rows))
             },
           
             html: function(){
-                res.render("todos", { 
+                res.render("todo/list", { 
                     count: todos.count,
                     todos: todos.rows,
                     filterCompletion: filterCompletion
@@ -140,7 +142,7 @@ router.delete("/:todoId", async (req, res, next) => {
 
     try {
 
-        let result = await db.todos
+        let result = await db.Todo
         .destroy({
             where: {
                 id: req.params.todoId
@@ -150,7 +152,6 @@ router.delete("/:todoId", async (req, res, next) => {
         result = result ? { status: "success" } : { status: "failure" }
 
         res.format({
-
             text: function(){
                 res.send(JSON.stringify(result))
             },
@@ -177,19 +178,20 @@ router.patch("/:todoId", async (req, res, next) => {
         let changes = {}
         let where = { where: { id: req.params.todoId } }
 
-        if (req.body.message) {
-            changes.message = req.body.message
+        if (req.body.title) {
+            changes.title = req.body.title
         }
-
-        if (req.body.completion) {
+        if (req.body.description) {
+            changes.description = req.body.description
+        }
+        if (validCompletionStatus.includes(req.body.completion)) {
             changes.completion = req.body.completion
         }
 
-        let result = await db.todos.update(changes, where)
+        let result = await db.Todo.update(changes, where)
         result = result ? { status: "success" } : { status: "failure" }
 
         res.format({
-
             text: function(){
                 res.send(JSON.stringify(result))
             },

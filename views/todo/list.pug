@@ -1,4 +1,4 @@
-extends layout
+extends ../layout
 
 block content
     h1 Todo Manager
@@ -6,28 +6,14 @@ block content
     form(action='/todos/add' method='GET')
         button(type='submit') add
     br
-
+    
     form(action='/todos' method='GET')
-
         select(name='completion')
-
-            if filterCompletion === 'todo'
-                option(value='todo' selected) todo
-            else 
-                option(value='todo') todo
-
-            if filterCompletion === 'in progress'
-                option(value='in progress' selected) in progress
-            else 
-                option(value='in progress') in progress
-
-            if filterCompletion === 'done'
-                option(value='done' selected) done
-            else 
-                option(value='done') done
+            option(value='todo' selected = filterCompletion==='todo') todo
+            option(value='in progress' selected = filterCompletion==='in progress') in progress
+            option(value='done' selected = filterCompletion==='done') done
         button(type='submit') filter
     br
-
     a(href="/todos")
         button all
     br
@@ -36,7 +22,9 @@ block content
         each todo in todos
             li id : #{todo.id}  
                 br 
-                | message : #{todo.message} 
+                | title : #{todo.title}
+                br 
+                | description : #{todo.description}
                 br 
                 | completion : #{todo.completion}
             form(action='/todos/' + todo.id + '?_method=DELETE' method='POST')

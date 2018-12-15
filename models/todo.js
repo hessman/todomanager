@@ -1,12 +1,13 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
-  const todos = sequelize.define('todos', {
-    message: DataTypes.TEXT,
+  const Todo = sequelize.define('Todo', {
+    title: DataTypes.TEXT,
+    description: DataTypes.TEXT,
     completion: DataTypes.STRING
   }, {});
-  todos.associate = function(models) {
-    todos.belongsToMany(models.users, { through: 'users_todos', foreignKey: 'todoId' })
-    todos.belongsToMany(models.teams, { through: 'teams_todos', foreignKey: 'todoId' })
+  Todo.associate = function(models) {
+    Todo.belongsToMany(models.User, { through: 'UserTodo', foreignKey: 'todoId' });
+    Todo.belongsToMany(models.Team, { through: 'TeamTodo', foreignKey: 'todoId' });
   };
-  return todos;
+  return Todo;
 };

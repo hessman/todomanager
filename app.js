@@ -7,6 +7,8 @@ const path           = require("path")
 
 const indexRouter    = require("./routes/index")
 const todosRouter    = require("./routes/todos")
+const usersRouter    = require("./routes/users")
+const teamsRouter    = require("./routes/teams")
 
 const app = express()
 
@@ -22,7 +24,11 @@ app.use(express.static(path.join(__dirname, "assets")))
 app.use(methodOverride('_method'))
 
 app.use("/", indexRouter)
+
 app.use("/todos", todosRouter)
+app.use("/users", usersRouter)
+//app.use("/teams", teamsRouter)
+
 
 app.use( (req, res, next) => {
   next(createError(404))
@@ -34,7 +40,19 @@ app.use( (err, req, res, next) => {
   res.locals.error = req.app.get("env") === "development" ? err : {}
 
   res.status(err.status || 500)
-  res.render("error")
+  res.format({
+    text: function(){
+        res.send(JSON.stringify("Error : " + err.message))
+    },
+  
+    html: function(){
+        res.render("error")
+    },
+  
+    json: function(){
+        res.json(err)
+    }
+  })
 })
 
 module.exports = app

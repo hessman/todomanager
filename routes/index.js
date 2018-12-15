@@ -1,8 +1,11 @@
 const express = require("express")
 const router  = express.Router()
 
-router.get("/", (req, res, next) => {
-  //res.render("index", { title: "TODO Manager" })
+router.get("/login", (req, res, next) => {
+  res.render("")
+})
+
+router.get("/signup", (req, res, next) => {
   res.redirect("/todos")
 })
 

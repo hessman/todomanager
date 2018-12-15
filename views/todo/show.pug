@@ -1,0 +1,16 @@
+extends ../layout
+
+block content
+    h1= todo.message
+    ul 
+        li id          : #{todo.id}
+        li title       : #{todo.title}
+        li description : #{todo.description}
+        li completion  : #{todo.completion}
+        li created at  : #{todo.createdAt}
+        li updated at  : #{todo.updatedAt}
+
+        form(action='/todos/' + todo.id + '?_method=DELETE' method='POST')
+             button(type='submit') delete
+        form(action='/todos/' + todo.id + '/edit' method='GET')
+             button(type='submit') edit
