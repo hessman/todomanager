@@ -1,18 +1,18 @@
 extends ../layout
 
 block content
-    
-    h1= isNew ? 'Create a todo' : 'Update a todo'
-    form(action= isNew ? '/todos' : '/todos/' + todo.id + '?_method=PATCH', method='POST')
-        label title :
-        input(type='text', name='title' value= isNew ? '' : todo.title) 
-        br
-        label description :
-        textarea(name='description')= isNew ? '' : todo.description
-        br
-        label completion : 
-        select(name='completion')
-            option(value='todo' selected = isNew || todo.completion==='todo') todo
-            option(value='in progress' selected = !isNew && todo.completion==='in progress') in progress
-            option(value='done' selected = !isNew && todo.completion==='done') done
-            input(type='submit', value= isNew ? 'create' : 'update')
+
+    .panel.panel-default.post-it
+        .panel-header
+            h1.post-it= isNew ? 'Create a todo' : 'Update a todo'
+        .panel-body
+            form(action= isNew ? '/todos' : '/todos/' + todo.id + '?_method=PATCH', method='POST').form-group
+                label.post-it(for='title') Title
+                input#title.form-control.post-it(type='text', name='title' value= isNew ? '' : todo.title)
+                label.post-it(for='description') Description
+                textarea#description.form-control.post-it(name='description')= isNew ? '' : todo.description
+                select#completion.form-control.post-it(name='completion')
+                    option(value='todo' selected = isNew || todo.completion==='todo') todo
+                    option(value='in progress' selected = !isNew && todo.completion==='in progress') in progress
+                    option(value='done' selected = !isNew && todo.completion==='done') done
+                input.post-it-btn(type='submit', value= isNew ? 'create' : 'save')

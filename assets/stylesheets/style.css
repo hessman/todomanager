@@ -1,8 +1,73 @@
 body {
   padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  font: 14px "Ubuntu", Helvetica, Arial, sans-serif;
 }
 
 a {
   color: #00B7FF;
+  
+}
+
+h1 {
+  text-align: center;
+  font: 20px "Ubuntu", Helvetica, Arial, sans-serif;
+}
+
+
+.post-it {
+  width: 50%;
+  margin: auto;
+  height: auto;
+  background-color: #feff9c;
+  box-shadow: 5px 10px 18px #888888;
+  font: 14px "Ubuntu", Helvetica, Arial, sans-serif;
+}
+
+h1.post-it {
+  text-align: center;
+  font: 20px "Ubuntu", Helvetica, Arial, sans-serif;
+  padding: 10px;
+  padding-bottom: 20px;
+  box-shadow: none;
+}
+
+label.post-it {
+  box-shadow: none;
+  text-align: center;
+  margin-bottom: 5px;
+  width: 100%;
+}
+
+textarea.post-it {
+  box-shadow: none;
+  margin: auto;
+  width: 90%;
+  border: none;
+  color: #000;
+}
+
+input.post-it {
+  box-shadow: none;
+  margin: auto;
+  width: 90%;
+  box-shadow: none;
+  color: #000;
+  border: none;
+}
+
+input.post-it-btn {
+  display: block;
+  margin: 10px auto 10px auto;
+  width: 50%;
+  color: #000;
+  box-shadow: none;
+  border: none;
+}
+
+select.post-it {
+  box-shadow: none;
+  margin: auto;
+  width: 50%;
+  color: #000;
+  border: none;
 }
