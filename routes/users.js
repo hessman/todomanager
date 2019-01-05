@@ -100,6 +100,7 @@ router.get("/logout", async (req, res, next) => {
 router.patch("/account", async (req, res, next) => {
 
   try {
+
     let changes = {}
     let where = {
       where: {
@@ -164,6 +165,7 @@ router.patch("/account", async (req, res, next) => {
 router.delete("/account", async (req, res, next) => {
 
   try {
+    
     await db.Session.destroy({
       where: {
         accessToken: req.session.accessToken

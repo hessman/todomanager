@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 
-const app   = require("../app")
 const debug = require("debug")("todolist:server")
 const http  = require("http")
+const app   = require("../app")
 
 const port = process.env.PORT || "8080"
 app.set("port", port)

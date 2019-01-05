@@ -12,6 +12,7 @@ class Session {
         Pushes some info about the session into req.session.
     */
     try {
+      
       let isConnected = false
       let firstname
       let token

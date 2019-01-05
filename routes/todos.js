@@ -11,7 +11,7 @@ const validCompletionStatus = ["todo", "in progress", "done"]
 router.post("/", async (req, res, next) => {
 
   try {
-
+    
     let completion = validCompletionStatus.includes(req.body.completion) ? req.body.completion : "todo"
     let title = req.body.title ? req.body.title : "no title"
     let description = req.body.description ? req.body.description : "no description"
@@ -130,9 +130,6 @@ router.get("/", async (req, res, next) => {
     }
     if (req.query.completion) {
       options.where.completion = req.query.completion
-      filterCompletion = req.query.completion
-    } else {
-      filterCompletion = "todo"
     }
 
     const todos = await db.Todo.findAndCountAll(options)
@@ -145,7 +142,6 @@ router.get("/", async (req, res, next) => {
           count: todos.count,
           todos: todos.rows,
           session: req.session,
-          filterCompletion: filterCompletion
         })
       },
 
