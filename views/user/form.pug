@@ -6,7 +6,7 @@ block content
         .panel-header
             h1= isNew ? 'Register' : 'Edit account'
         .panel-body
-            form(action= isNew ? '/register' : '/account/edit' + '?_method=PATCH', method='POST').form-group
+            form(action= isNew ? '/register' : '/account' + '?_method=PATCH', method='POST').form-group
               .form-group
                 label(for='username') Username
                 input.form-control#username(type='text', name='username' value= isNew ? '' : user.username)

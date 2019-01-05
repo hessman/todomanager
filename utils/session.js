@@ -82,24 +82,29 @@ class Session {
           - redirects to /login for html.
           - throws an error for json.
     */
+    try {
 
-    if (req.session.isConnected) {
-      next()
-      return
-    }
-
-    res.format({
-
-      html: () => {
-        res.clearCookie('accessToken')
-        res.redirect('/login')
-      },
-
-      json: () => {
-        res.removeHeader('X-AccessToken')
-        throw new Error("Invalid X-AccessToken")
+      if (req.session.isConnected) {
+        next()
+        return
       }
-    })
+
+      res.format({
+
+        html: () => {
+          res.clearCookie('accessToken')
+          res.redirect('/login')
+        },
+
+        json: () => {
+          res.removeHeader('X-AccessToken')
+          throw new Error("Invalid X-AccessToken")
+        }
+      })
+      
+    } catch (Err) {
+      next(Err)
+    }
   }
 }
 

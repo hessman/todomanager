@@ -11,8 +11,17 @@ router.get("/account", async (req, res, next) => {
 
   try {
 
-    let user = await db.User.findByPk(req.session.userId)
-    delete user.password
+    const user = await db.User.findByPk(req.session.userId)
+
+    // User information without password
+    const userJSON = {
+      id: user.id,
+      username: user.username,
+      firstname: user.firstname,
+      lastname: user.lastname,
+      createdAt: user.createdAt,
+      updatedAt: user.updatedAt
+    }
 
     res.format({
 
@@ -25,7 +34,7 @@ router.get("/account", async (req, res, next) => {
       },
 
       json: () => {
-        res.json(user)
+        res.json(userJSON)
       }
     })
   } catch (Err) {
@@ -88,7 +97,7 @@ router.get("/logout", async (req, res, next) => {
     Patch routes
 */
 
-router.patch("/account/edit", async (req, res, next) => {
+router.patch("/account", async (req, res, next) => {
 
   try {
     let changes = {}
