@@ -19,6 +19,10 @@ router.post("/", async (req, res, next) => {
             description: description, 
             completion: completion 
         })
+        
+        const user = await db.User.findOne({ where: {username: 'test'} })
+        
+        await todo.setUser(user)
 
         res.format({
             text: function(){

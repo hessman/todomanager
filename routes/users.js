@@ -3,40 +3,51 @@ const bcrypt  = require("../utils/bcrypt")
 const router  = express.Router()
 const db      = require('../models')
 
-router.post("/", async (req, res, next) => {
+router.get("/:userId", async (req, res, next) => {
+
+})
+
+router.get("/:userId", async (req, res, next) => {
+
+})
+
+router.patch("/:userId", async (req, res, next) => {
 
     try {
-        
-        if (req.body.firstname && req.body.lastname && req.body.password && req.body.confirmPassword) {
-            if (req.body.password === req.body.confirmPassword) {
-                hashedPassword = await bcrypt.hash(req.body.password)
-            } else {
-                throw new Error("Password does not match the confirm password")
-            }
-        } else {
-            console.log(req.body)
-            throw new Error("Missing information")
+
+        let changes = {}
+        let where = { where: { id: req.params.userId } }
+
+        if (req.body.username) {
+            changes.username = req.body.username
+        }
+        //Check if already taken
+
+        if (req.body.firstname) {
+            changes.firstname = req.body.firstname
+        }
+        if (req.body.lastname) {
+            changes.lastname = req.body.lastname
         }
 
-        const user = await db.User
-        .create({
-            firstname: req.body.firstname, 
-            lastname: req.body.lastname, 
-            password: hashedPassword,
-            rank: 1
-        })
+        if (req.body.password && req.body.confirmPassword) {
+            changes.description = req.body.description
+        }
+
+        let result = await db.User.update(changes, where)
+        result = result ? { status: "success" } : { status: "failure" }
 
         res.format({
             text: function(){
-                res.send(JSON.stringify(user))
+                res.send(JSON.stringify(result))
             },
           
             html: function(){
-                res.redirect('/login')
+                res.redirect('/account')
             },
           
             json: function(){
-                res.json(user)
+                res.json(result)
             }
         })
 

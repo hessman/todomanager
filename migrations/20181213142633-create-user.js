@@ -8,6 +8,10 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
+      username: {
+        allowNull: false,
+        type: Sequelize.STRING
+      },
       firstname: {
         allowNull: false,
         type: Sequelize.STRING
@@ -19,6 +23,9 @@ module.exports = {
       password: {
         allowNull: false,
         type: Sequelize.STRING
+      },
+      teamId: {
+        type: Sequelize.INTEGER
       },
       rank: {
         allowNull: false,

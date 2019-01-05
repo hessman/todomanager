@@ -1,16 +1,16 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
   const User = sequelize.define('User', {
+    username: DataTypes.STRING,
     firstname: DataTypes.STRING,
     lastname: DataTypes.STRING,
     password: DataTypes.STRING,
-    rank: DataTypes.STRING
+    rank: DataTypes.STRING,
+    teamId: DataTypes.INTEGER
   }, {});
   User.associate = function(models) {
-    User.belongsToMany(models.Todo, { through: 'UserTodo', foreignKey: 'userId' });
-    User.belongsToMany(models.Team, { through: 'Affiliation', foreignKey: 'userId' });
-    User.belongsToMany(models.Team, { through: 'Moderation', foreignKey: 'userId' });
-    User.hasOne(models.Session);
+    User.hasMany(models.Todo)
+    User.belongsTo(models.Team, { foreignKey: 'teamId' });
   };
   return User;
 };
