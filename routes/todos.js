@@ -55,7 +55,7 @@ router.get("/add", async (req, res, next) => {
 
   res.render("todo/form", {
     title: "Add a todo list",
-    info: req.info,
+    session: req.session,
     isNew: true
   })
 })
@@ -72,7 +72,7 @@ router.get("/:todoId/edit", async (req, res, next) => {
 
     res.render("todo/form", {
       title: "Add a todo list",
-      info: req.info,
+      session: req.session,
       todo: todo,
       isNew: false
     })
@@ -99,7 +99,7 @@ router.get("/:todoId", async (req, res, next) => {
         res.render("todo/show", {
           title: todo.title,
           todo: todo,
-          info: req.info
+          session: req.session
         })
       },
 
@@ -144,7 +144,7 @@ router.get("/", async (req, res, next) => {
           title: "Todos",
           count: todos.count,
           todos: todos.rows,
-          info: req.info,
+          session: req.session,
           filterCompletion: filterCompletion
         })
       },

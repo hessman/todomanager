@@ -11,7 +11,7 @@ const db      = require('../models')
 router.get("/", async (req, res, next) => {
   res.render("index", {
     title: "Todo Manager",
-    info: req.info
+    session: req.session
   })
 })
 
@@ -22,7 +22,7 @@ router.get("/", async (req, res, next) => {
 router.get("/login", (req, res, next) => {
   res.render("user/login", {
     title: "Login",
-    info: req.info
+    session: req.session
   })
 })
 
@@ -67,7 +67,6 @@ router.post("/login", async (req, res, next) => {
     res.format({
 
       html: () => {
-        console.log("Sending of the cookie...")
         res.cookie('AccessToken', token, {
           maxAge: 900000,
           httpOnly: true
@@ -94,7 +93,7 @@ router.post("/login", async (req, res, next) => {
 router.get("/register", (req, res, next) => {
   res.render("user/form", {
     title: "Register",
-    info: req.info,
+    session: req.session,
     isNew: true
   })
 })
@@ -110,7 +109,6 @@ router.post("/register", async (req, res, next) => {
         throw new Error("Password does not match the confirm password")
       }
     } else {
-      console.log(req.body)
       throw new Error("Missing information")
     }
 

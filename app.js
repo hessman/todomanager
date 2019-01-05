@@ -7,8 +7,9 @@ const express = require("express")
 const logger  = require("morgan")
 const path    = require("path")
 
-const SessionChecker = require("./utils/sessionChecker")
-const indexRouter    = require("./routes/index")
+const session = require("./utils/session")
+
+const publicRouter    = require("./routes/public")
 const todosRouter    = require("./routes/todos")
 const usersRouter    = require("./routes/users")
 
@@ -26,16 +27,14 @@ app.use(cookieParser())
 app.use(express.static(path.join(__dirname, "assets")))
 app.use(methodOverride('_method'))
 
-// Passive session's checker
-app.use(SessionChecker.passive)
+app.use(session.check)
 
 /*  Public routes
     Such as /, /login, /register
 */
-app.use("/", indexRouter)
+app.use("/", publicRouter)
 
-// Active session's checker
-app.use(SessionChecker.active)
+app.use(session.redirect)
 
 /*  Private routes
     Such as /account, /todos and /logout
@@ -61,7 +60,7 @@ app.use((err, req, res, next) => {
 
     html: () => {
       res.render("error", {
-        info: req.info
+        session: req.session
       })
     },
 

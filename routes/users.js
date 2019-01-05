@@ -20,7 +20,7 @@ router.get("/account", async (req, res, next) => {
         res.render('user/show', {
           title: "Account",
           user: user,
-          info: req.info
+          session: req.session
         })
       },
 
@@ -43,7 +43,7 @@ router.get("/account/edit", async (req, res, next) => {
     res.render("user/form", {
       title: "Edit account",
       user: user,
-      info: req.info,
+      session: req.session,
       isNew: false
     })
       
@@ -66,7 +66,6 @@ router.get("/logout", async (req, res, next) => {
     } : {
       status: "failure"
     }
-    console.log("Logout, session deleted...")
 
     res.format({
 
@@ -152,6 +151,7 @@ router.patch("/account/edit", async (req, res, next) => {
 /*
     Delete routes
 */
+
 router.delete("/account", async (req, res, next) => {
 
   try {
@@ -172,7 +172,6 @@ router.delete("/account", async (req, res, next) => {
     } : {
       status: "failure"
     }
-    console.log("Logout and deletion of user...")
 
     res.format({
 

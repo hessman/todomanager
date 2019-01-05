@@ -4,15 +4,15 @@ nav.navbar.navbar-default
       a(href="/").navbar-brand Todo Manager
 
     ul.nav.navbar-nav  
-      if !info.isConnected 
+      if !session.isConnected 
         li 
           a(href="/register") Register
       else 
         li
-          p Hi #{info.firstname} !
+          p Hi #{session.firstname} !
         li
           a(href="/todos") Todos
         li
           a(href="/account") Account
       li
-        a(href=info.isConnected ? '/logout' : '/login')= info.isConnected ? 'Logout' : 'Login'
+        a(href=session.isConnected ? '/logout' : '/login')= session.isConnected ? 'Logout' : 'Login'
