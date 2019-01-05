@@ -4,13 +4,10 @@ module.exports = (sequelize, DataTypes) => {
     username: DataTypes.STRING,
     firstname: DataTypes.STRING,
     lastname: DataTypes.STRING,
-    password: DataTypes.STRING,
-    rank: DataTypes.STRING,
-    teamId: DataTypes.INTEGER
+    password: DataTypes.STRING
   }, {});
-  User.associate = function(models) {
+  User.associate = function (models) {
     User.hasMany(models.Todo)
-    User.belongsTo(models.Team, { foreignKey: 'teamId' });
   };
   return User;
 };

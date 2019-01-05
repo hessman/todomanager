@@ -24,13 +24,6 @@ module.exports = {
         allowNull: false,
         type: Sequelize.STRING
       },
-      teamId: {
-        type: Sequelize.INTEGER
-      },
-      rank: {
-        allowNull: false,
-        type: Sequelize.STRING
-      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

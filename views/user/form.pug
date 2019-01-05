@@ -1,0 +1,30 @@
+extends ../layout
+
+block content
+
+    .panel.panel-default
+        .panel-header
+            h1= isNew ? 'Register' : 'Edit account'
+        .panel-body
+            form(action= isNew ? '/register' : '/account/edit' + '?_method=PATCH', method='POST').form-group
+              .form-group
+                label(for='username') Username
+                input.form-control#username(type='text', name='username' value= isNew ? '' : user.username)
+
+              .form-group
+                label(for='firstname') Firstname
+                input.form-control#firstname(type='text', name='firstname' value= isNew ? '' : user.firstname)
+              
+              .form-group
+                label(for='lastname') Lastname
+                input.form-control#lastname(type='text', name='lastname' value= isNew ? '' : user.lastname)
+
+              .form-group
+                label(for='password') Password
+                input.form-control#password(type='password', name='password' value='')
+
+              .form-group
+                label(for='confirmPassword') Password confirmation
+                input.form-control#confirmPassword(type='password', name='confirmPassword' value='')
+
+              input.btn.btn-default(type='submit', value= isNew ? 'Register' : 'Update')

@@ -4,12 +4,12 @@ module.exports = (sequelize, DataTypes) => {
     title: DataTypes.TEXT,
     description: DataTypes.TEXT,
     completion: DataTypes.STRING,
-    userId: DataTypes.INTEGER,
-    teamId: DataTypes.INTEGER
+    userId: DataTypes.INTEGER
   }, {});
-  Todo.associate = function(models) {
-    Todo.belongsTo(models.User, {foreignKey: 'userId'});
-    Todo.belongsTo(models.Team, {foreignKey: 'teamId'});
+  Todo.associate = function (models) {
+    Todo.belongsTo(models.User, {
+      foreignKey: 'userId'
+    });
   };
   return Todo;
 };

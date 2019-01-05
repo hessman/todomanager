@@ -1,0 +1,18 @@
+nav.navbar.navbar-default
+  .container-fluid
+    .navbar-header
+      a(href="/").navbar-brand Todo Manager
+
+    ul.nav.navbar-nav  
+      if !info.isConnected 
+        li 
+          a(href="/register") Register
+      else 
+        li
+          p Hi #{info.firstname} !
+        li
+          a(href="/todos") Todos
+        li
+          a(href="/account") Account
+      li
+        a(href=info.isConnected ? '/logout' : '/login')= info.isConnected ? 'Logout' : 'Login'

@@ -1,14 +1,5 @@
 extends layout.pug
 
 block content
-    h1 Todo Manager
-    p Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam accumsan finibus tortor, condimentum tincidunt lectus luctus non. Nunc vitae lobortis leo. Maecenas viverra ex eget tempus suscipit. Nunc quis malesuada nulla. Aenean at quam dolor. Pellentesque ac cursus elit. Suspendisse eget mauris vitae quam semper tempor nec nec risus. Proin non purus finibus, malesuada lorem quis, tempor diam. Maecenas at risus non libero maximus pharetra. Phasellus risus quam, egestas at lobortis a, sagittis sed ante. Praesent pretium ipsum in varius lobortis. Integer vehicula scelerisque leo, sit amet tempor nibh ultricies eget. Suspendisse luctus dapibus sodales. Vivamus sapien sem, gravida sit amet urna sed, commodo pellentesque lacus.
 
-    if !isConnected 
-        form(action='/register' method='GET')
-            button.btn(type='submit') Register
-    else 
-        p Hi #{firstname} !
-
-    form(action= isConnected ? '/logout' : '/login' method='GET')
-        button.btn(type='submit')= isConnected ? 'Logout' : 'Login'
+  p Welcome to the home page of the Todo Manager !

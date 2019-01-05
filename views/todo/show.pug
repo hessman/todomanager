@@ -1,16 +1,32 @@
 extends ../layout
 
 block content
-    h1= todo.title
-    ul 
-        li id          : #{todo.id}
-        li title       : #{todo.title}
-        li description : #{todo.description}
-        li completion  : #{todo.completion}
-        li created at  : #{todo.createdAt}
-        li updated at  : #{todo.updatedAt}
 
-        form(action='/todos/' + todo.id + '?_method=DELETE' method='POST')
-             button(type='submit') delete
-        form(action='/todos/' + todo.id + '/edit' method='GET')
-             button(type='submit') edit
+    h1= todo.title
+
+    table.table
+      tbody
+        tr
+          td id :
+          td= todo.id
+        tr
+          td title :
+          td= todo.title
+        tr
+          td description :
+          td= todo.description
+        tr 
+          td completion :
+          td= todo.completion
+        tr
+          td created at :
+          td= todo.createdAt
+        tr
+          td updated at :
+          td= todo.updatedAt
+            
+    br
+    a(href='/todos/' + todo.id + '?_method=DELETE') Delete
+    br
+    a(href='/todos/' + todo.id + '/edit') Edit
+      

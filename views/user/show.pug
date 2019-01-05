@@ -1,0 +1,28 @@
+extends ../layout
+
+block content
+
+    h1 Account
+
+    table.table
+      tbody
+        tr
+          td username :
+          td= user.username
+        tr
+          td firstname :
+          td= user.firstname
+        tr
+          td lastname :
+          td= user.lastname
+        tr 
+          td created at :
+          td= user.createdAt
+        tr
+          td updated at :
+          td= user.updatedAt
+    
+    br
+    a(href='/account?_method=DELETE') Delete
+    br
+    a(href='/account/edit') Edit

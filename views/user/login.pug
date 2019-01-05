@@ -1,11 +1,14 @@
 extends ../layout
 
 block content
+    h1 Login
 
     form(action='/login', method='POST')
+      .form-group
         label(for='username') Username
-        input#username(type='text', name='username')
+        input.form-control#username(type='text', name='username')
+      .form-group
         label(for='password') Password
-        input#username(type='text', name='password')
-        input(type='submit', value='Log In')
+        input.form-control#username(type='password', name='password')
+      input.btn.btn-default(type='submit', value='Login')
         

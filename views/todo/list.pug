@@ -1,35 +1,31 @@
 extends ../layout
 
 block content
-    h1 Todo Manager
 
-    form(action='/todos/add' method='GET')
-        button(type='submit') add
-    br
-    
-    form(action='/todos' method='GET')
-        select(name='completion')
-            option(value='todo' selected = filterCompletion==='todo') todo
-            option(value='in progress' selected = filterCompletion==='in progress') in progress
-            option(value='done' selected = filterCompletion==='done') done
-        button(type='submit') filter
-    br
-    a(href="/todos")
-        button all
-    br
+    h1 Todos
 
-    ul 
-        each todo in todos
-            li id : #{todo.id}  
-                br 
-                | title : #{todo.title}
-                br 
-                | description : #{todo.description}
-                br 
-                | completion : #{todo.completion}
-            form(action='/todos/' + todo.id + '?_method=DELETE' method='POST')
-                button(type='submit') delete
-            form(action='/todos/' + todo.id method='GET')
-                button(type='submit') show
-            br
-    
+    a(href='/todos/add') New todo
+        
+    table.table
+      thead
+        tr
+          th Todo
+          th In progress
+          th Done
+      tbody
+        tr
+          td
+            .list-group
+            each todo in todos
+              if todo.completion === "todo"
+                a.list-group-item(href='/todos/' + todo.id)= todo.title
+          td
+            .list-group
+            each todo in todos
+              if todo.completion === "in progress"
+                a.list-group-item(href='/todos/' + todo.id)= todo.title
+          td
+            .list-group
+              each todo in todos
+                if todo.completion === "done"
+                  a.list-group-item(href='/todos/' + todo.id)= todo.title
