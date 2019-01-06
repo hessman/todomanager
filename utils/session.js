@@ -54,7 +54,7 @@ class Session {
               }
             })
 
-            firstname = user.dataValues.firstnam
+            firstname = user.dataValues.firstname
 
           } else {
 
