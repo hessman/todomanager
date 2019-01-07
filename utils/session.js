@@ -15,7 +15,7 @@ class Session {
 
       let token
       req.session = null
-      req.user
+      req.user = null
 
       res.format({
 
@@ -45,13 +45,7 @@ class Session {
 
             req.session = session.dataValues
 
-            const user = await db.User.findOne({
-              where: {
-                id: session.userId
-              }
-            })
-
-            req.user = user.dataValues
+            req.user = await db.User.findByPk(req.session.userId)
 
           } else {
 

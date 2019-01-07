@@ -12,20 +12,17 @@ router.post("/", async (req, res, next) => {
 
   try {
 
-    let completion = validCompletionStatus.includes(req.body.completion) ? req.body.completion : "todo"
-    let title = req.body.title ? req.body.title : "no title"
-    let description = req.body.description ? req.body.description : "no description"
+    const completion = validCompletionStatus.includes(req.body.completion) ? req.body.completion : "todo"
+    const title = req.body.title ? req.body.title : "no title"
+    const description = req.body.description ? req.body.description : "no description"
 
-    const todo = await db.Todo
-      .create({
-        title: title,
-        description: description,
-        completion: completion,
-      })
+    const todo = await db.Todo.create({
+      title: title,
+      description: description,
+      completion: completion,
+    })
 
-    const user = await db.User.findByPk(req.user.id)
-
-    await todo.setUser(user)
+    await todo.setUser(req.user)
 
     res.format({
 
@@ -50,9 +47,9 @@ router.post("/", async (req, res, next) => {
 router.get("/add", async (req, res, next) => {
 
   res.render("todo/form", {
-    title: "Add a todo list",
     session: req.session,
     user: req.user,
+    title: "Add a todo list",
     isNew: true
   })
 })
@@ -68,9 +65,9 @@ router.get("/:todoId/edit", async (req, res, next) => {
     }
 
     res.render("todo/form", {
-      title: "Add a todo list",
       session: req.session,
       user: req.user,
+      title: "Add a todo list",
       todo: todo,
       isNew: false
     })
@@ -138,11 +135,11 @@ router.get("/", async (req, res, next) => {
 
       html: () => {
         res.render("todo/list", {
+          session: req.session,
+          user: req.user,
           title: "Todos",
           count: todos.count,
-          todos: todos.rows,
-          session: req.session,
-          user: req.user
+          todos: todos.rows
         })
       },
 
@@ -164,19 +161,16 @@ router.delete("/:todoId", async (req, res, next) => {
 
   try {
 
-    let result = await db.Todo
-      .destroy({
-        where: {
-          id: req.params.todoId,
-          userId: req.user.id
-        }
-      })
-
-    result = result ? {
+    const result = await db.Todo.destroy({
+      where: {
+        id: req.params.todoId,
+        userId: req.user.id
+      }
+    }) ? {
       status: "success"
     } : {
-        status: "failure"
-      }
+      status: "failure"
+    }
 
     res.format({
 
@@ -220,12 +214,11 @@ router.patch("/:todoId", async (req, res, next) => {
       changes.completion = req.body.completion
     }
 
-    let result = await db.Todo.update(changes, where)
-    result = result ? {
+    const result = await db.Todo.update(changes, where) ? {
       status: "success"
     } : {
-        status: "failure"
-      }
+      status: "failure"
+    }
 
     res.format({
 

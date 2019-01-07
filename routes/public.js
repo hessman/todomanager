@@ -9,10 +9,11 @@ const db = require('../models')
 */
 
 router.get("/", async (req, res, next) => {
+
   res.render("index", {
-    title: "Todo Manager",
     session: req.session,
-    user: req.user
+    user: req.user,
+    title: "Todo Manager"
   })
 })
 
@@ -21,10 +22,11 @@ router.get("/", async (req, res, next) => {
 */
 
 router.get("/login", (req, res, next) => {
+
   res.render("user/login", {
-    title: "Login",
     session: req.session,
-    user: req.user
+    user: req.user,
+    title: "Login"
   })
 })
 
@@ -61,12 +63,11 @@ router.post("/login", async (req, res, next) => {
     // 1 hour session max
     expireDate.setHours(now.getHours() + 1)
 
-    await db.Session
-      .create({
-        accessToken: token,
-        userId: user.id,
-        expiresAt: expireDate
-      })
+    await db.Session.create({
+      accessToken: token,
+      userId: user.id,
+      expiresAt: expireDate
+    })
 
     res.format({
 
@@ -95,10 +96,11 @@ router.post("/login", async (req, res, next) => {
 */
 
 router.get("/register", (req, res, next) => {
+
   res.render("user/form", {
-    title: "Register",
     session: req.session,
     user: req.user,
+    title: "Register",
     isNew: true
   })
 })
@@ -107,34 +109,35 @@ router.post("/register", async (req, res, next) => {
 
   try {
 
-    if (req.body.username && req.body.firstname && req.body.lastname && req.body.password && req.body.confirmPassword) {
+    if (req.body.username && req.body.firstname && req.body.lastname &&
+      req.body.password && req.body.confirmPassword) {
+
       if (req.body.password === req.body.confirmPassword) {
         hashedPassword = await bcrypt.hash(req.body.password)
       } else {
         throw new Error("Password does not match the confirm password")
       }
+
     } else {
       throw new Error("Missing information")
     }
 
-    const alreadyTaken = await db.User
-      .findOne({
-        where: {
-          username: req.body.username
-        }
-      })
+    const alreadyTaken = await db.User.findOne({
+      where: {
+        username: req.body.username
+      }
+    })
 
     if (alreadyTaken) {
       throw new Error("Username already taken")
     }
 
-    const user = await db.User
-      .create({
-        username: req.body.username,
-        firstname: req.body.firstname,
-        lastname: req.body.lastname,
-        password: hashedPassword
-      })
+    const user = await db.User.create({
+      username: req.body.username,
+      firstname: req.body.firstname,
+      lastname: req.body.lastname,
+      password: hashedPassword
+    })
 
     res.format({
 

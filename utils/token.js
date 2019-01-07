@@ -14,8 +14,7 @@ class Token {
         if (err) {
           reject(err)
         } else {
-          const token = buffer.toString("hex")
-          resolve(token)
+          resolve(buffer.toString("hex"))
         }
       })
     })

@@ -8,14 +8,14 @@ const db = require('../models')
 */
 
 router.get("/account", async (req, res, next) => {
-  
+
   res.format({
 
     html: () => {
       res.render('user/show', {
-        title: "Account",
+        session: req.session,
         user: req.user,
-        session: req.session
+        title: "Account"
       })
     },
 
@@ -23,7 +23,6 @@ router.get("/account", async (req, res, next) => {
       // User information without password
       let userJson = req.user
       delete userJson.password
-      console.log(userJson)
       res.json(userJson)
     }
   })
@@ -32,9 +31,9 @@ router.get("/account", async (req, res, next) => {
 router.get("/account/edit", async (req, res, next) => {
 
   res.render("user/form", {
-    title: "Edit account",
-    user: req.user,
     session: req.session,
+    user: req.user,
+    title: "Edit account",
     isNew: false
   })
 })
@@ -43,17 +42,15 @@ router.get("/logout", async (req, res, next) => {
 
   try {
 
-    let result = await db.Session.destroy({
+    const result = await db.Session.destroy({
       where: {
         id: req.session.id
       }
-    })
-
-    result = result ? {
+    }) ? {
       status: "success"
     } : {
-        status: "failure"
-      }
+      status: "failure"
+    }
 
     res.format({
 
@@ -89,12 +86,11 @@ router.patch("/account", async (req, res, next) => {
     }
 
     if (req.body.username) {
-      const alreadyTaken = await db.User
-        .findOne({
-          where: {
-            username: req.body.username
-          }
-        })
+      const alreadyTaken = await db.User.findOne({
+        where: {
+          username: req.body.username
+        }
+      })
 
       if (alreadyTaken && req.body.username !== req.user.username) {
         throw new Error("Username already taken")
@@ -111,6 +107,7 @@ router.patch("/account", async (req, res, next) => {
     }
 
     if (req.body.password && req.body.confirmPassword) {
+
       if (req.body.password === req.body.confirmPassword) {
         changes.password = await bcrypt.hash(req.body.password)
       } else {
@@ -118,12 +115,12 @@ router.patch("/account", async (req, res, next) => {
       }
     }
 
-    let result = await db.User.update(changes, where)
-    result = result ? {
+    const result = await db.User.update(changes, where) ? {
       status: "success"
     } : {
-        status: "failure"
-      }
+      status: "failure"
+    }
+
     res.format({
       html: () => {
         res.redirect('/account')
@@ -153,17 +150,15 @@ router.delete("/account", async (req, res, next) => {
       }
     })
 
-    let result = await db.User.destroy({
+    const result = await db.User.destroy({
       where: {
         id: req.user.id
       }
-    })
-
-    result = result ? {
+    }) ? {
       status: "success"
     } : {
-        status: "failure"
-      }
+      status: "failure"
+    }
 
     res.format({
 

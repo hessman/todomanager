@@ -54,13 +54,15 @@ app.use((err, req, res, next) => {
 
   res.status(err.status || 500)
   res.format({
+
     text: () => {
       res.send(JSON.stringify("Error : " + err.message))
     },
 
     html: () => {
       res.render("error", {
-        session: req.session
+        session: req.session,
+        user: req.user
       })
     },
 

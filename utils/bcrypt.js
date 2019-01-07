@@ -16,7 +16,7 @@ class Bcrypt {
         } else {
           resolve(hash)
         }
-      });
+      })
     })
   }
 
@@ -31,7 +31,7 @@ class Bcrypt {
         } else {
           resolve(res)
         }
-      });
+      })
     })
   }
 
