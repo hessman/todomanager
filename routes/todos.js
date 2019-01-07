@@ -1,6 +1,6 @@
 const express = require("express")
-const router  = express.Router()
-const db      = require('../models')
+const router = express.Router()
+const db = require('../models')
 
 const validCompletionStatus = ["todo", "in progress", "done"]
 
@@ -11,7 +11,7 @@ const validCompletionStatus = ["todo", "in progress", "done"]
 router.post("/", async (req, res, next) => {
 
   try {
-    
+
     let completion = validCompletionStatus.includes(req.body.completion) ? req.body.completion : "todo"
     let title = req.body.title ? req.body.title : "no title"
     let description = req.body.description ? req.body.description : "no description"
@@ -23,11 +23,7 @@ router.post("/", async (req, res, next) => {
         completion: completion,
       })
 
-    const user = await db.User.findOne({
-      where: {
-        id: req.session.userId
-      }
-    })
+    const user = await db.User.findByPk(req.user.id)
 
     await todo.setUser(user)
 
@@ -56,6 +52,7 @@ router.get("/add", async (req, res, next) => {
   res.render("todo/form", {
     title: "Add a todo list",
     session: req.session,
+    user: req.user,
     isNew: true
   })
 })
@@ -66,13 +63,14 @@ router.get("/:todoId/edit", async (req, res, next) => {
 
     const todo = await db.Todo.findByPk(req.params.todoId)
 
-    if (todo.userId !== req.session.userId) {
+    if (todo.userId !== req.user.id) {
       throw new Error("Invalid todo id")
     }
 
     res.render("todo/form", {
       title: "Add a todo list",
       session: req.session,
+      user: req.user,
       todo: todo,
       isNew: false
     })
@@ -89,7 +87,7 @@ router.get("/:todoId", async (req, res, next) => {
 
     const todo = await db.Todo.findByPk(req.params.todoId)
 
-    if (todo.userId !== req.session.userId) {
+    if (todo.userId !== req.user.id) {
       throw new Error("Invalid todo id")
     }
 
@@ -99,7 +97,8 @@ router.get("/:todoId", async (req, res, next) => {
         res.render("todo/show", {
           title: todo.title,
           todo: todo,
-          session: req.session
+          session: req.session,
+          user: req.user
         })
       },
 
@@ -118,9 +117,10 @@ router.get("/", async (req, res, next) => {
   try {
 
     let options = {
-      where: {}
+      where: {
+        userId: req.user.id
+      }
     }
-    options.where.userId = req.session.userId
 
     if (req.query.limit) {
       req.query.offset = req.query.offset ? req.query.offset : 0
@@ -142,6 +142,7 @@ router.get("/", async (req, res, next) => {
           count: todos.count,
           todos: todos.rows,
           session: req.session,
+          user: req.user
         })
       },
 
@@ -167,15 +168,15 @@ router.delete("/:todoId", async (req, res, next) => {
       .destroy({
         where: {
           id: req.params.todoId,
-          userId: req.session.userId
+          userId: req.user.id
         }
       })
 
     result = result ? {
       status: "success"
     } : {
-      status: "failure"
-    }
+        status: "failure"
+      }
 
     res.format({
 
@@ -205,7 +206,7 @@ router.patch("/:todoId", async (req, res, next) => {
     let where = {
       where: {
         id: req.params.todoId,
-        userId: req.session.userId
+        userId: req.user.id
       }
     }
 
@@ -223,13 +224,10 @@ router.patch("/:todoId", async (req, res, next) => {
     result = result ? {
       status: "success"
     } : {
-      status: "failure"
-    }
+        status: "failure"
+      }
 
     res.format({
-      text: function () {
-        res.send(JSON.stringify(result))
-      },
 
       html: function () {
         res.redirect('/todos')

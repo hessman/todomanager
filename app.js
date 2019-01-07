@@ -1,17 +1,17 @@
 const methodOverride = require("method-override")
 
-const cookieParser   = require("cookie-parser")
-const createError    = require("http-errors")
+const cookieParser = require("cookie-parser")
+const createError = require("http-errors")
 
-const publicRouter   = require("./routes/public")
-const todosRouter    = require("./routes/todos")
-const usersRouter    = require("./routes/users")
+const publicRouter = require("./routes/public")
+const todosRouter = require("./routes/todos")
+const usersRouter = require("./routes/users")
 
-const session        = require("./utils/session")
+const session = require("./utils/session")
 
-const express        = require("express")
-const logger         = require("morgan")
-const path           = require("path")
+const express = require("express")
+const logger = require("morgan")
+const path = require("path")
 
 const app = express()
 

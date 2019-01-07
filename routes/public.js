@@ -1,8 +1,8 @@
 const express = require("express")
-const router  = express.Router()
-const bcrypt  = require("../utils/bcrypt")
-const Token   = require("../utils/token")
-const db      = require('../models')
+const router = express.Router()
+const bcrypt = require("../utils/bcrypt")
+const Token = require("../utils/token")
+const db = require('../models')
 
 /*
   Index routes
@@ -11,7 +11,8 @@ const db      = require('../models')
 router.get("/", async (req, res, next) => {
   res.render("index", {
     title: "Todo Manager",
-    session: req.session
+    session: req.session,
+    user: req.user
   })
 })
 
@@ -22,7 +23,8 @@ router.get("/", async (req, res, next) => {
 router.get("/login", (req, res, next) => {
   res.render("user/login", {
     title: "Login",
-    session: req.session
+    session: req.session,
+    user: req.user
   })
 })
 
@@ -55,7 +57,9 @@ router.post("/login", async (req, res, next) => {
     const token = await Token.getRandom()
     const now = new Date()
     let expireDate = new Date()
-    expireDate = expireDate.setHours(now.getHours() + 1);
+
+    // 1 hour session max
+    expireDate.setHours(now.getHours() + 1)
 
     await db.Session
       .create({
@@ -94,6 +98,7 @@ router.get("/register", (req, res, next) => {
   res.render("user/form", {
     title: "Register",
     session: req.session,
+    user: req.user,
     isNew: true
   })
 })

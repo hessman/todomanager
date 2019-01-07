@@ -1,80 +1,59 @@
 const express = require("express")
-const bcrypt  = require("../utils/bcrypt")
-const router  = express.Router()
-const db      = require('../models')
+const bcrypt = require("../utils/bcrypt")
+const router = express.Router()
+const db = require('../models')
 
 /*
     Get routes
 */
 
 router.get("/account", async (req, res, next) => {
+  
+  res.format({
 
-  try {
+    html: () => {
+      res.render('user/show', {
+        title: "Account",
+        user: req.user,
+        session: req.session
+      })
+    },
 
-    const user = await db.User.findByPk(req.session.userId)
-
-    // User information without password
-    const userJSON = {
-      id: user.id,
-      username: user.username,
-      firstname: user.firstname,
-      lastname: user.lastname,
-      createdAt: user.createdAt,
-      updatedAt: user.updatedAt
+    json: () => {
+      // User information without password
+      let userJson = req.user
+      delete userJson.password
+      console.log(userJson)
+      res.json(userJson)
     }
-
-    res.format({
-
-      html: () => {
-        res.render('user/show', {
-          title: "Account",
-          user: user,
-          session: req.session
-        })
-      },
-
-      json: () => {
-        res.json(userJSON)
-      }
-    })
-  } catch (Err) {
-    next(Err)
-  }
+  })
 })
 
 router.get("/account/edit", async (req, res, next) => {
 
-  try {
-
-    let user = await db.User.findByPk(req.session.userId)
-    delete user.password
-
-    res.render("user/form", {
-      title: "Edit account",
-      user: user,
-      session: req.session,
-      isNew: false
-    })
-      
-  } catch (Err) {
-    next(Err)
-  }
+  res.render("user/form", {
+    title: "Edit account",
+    user: req.user,
+    session: req.session,
+    isNew: false
+  })
 })
 
 router.get("/logout", async (req, res, next) => {
 
   try {
+
     let result = await db.Session.destroy({
       where: {
-        accessToken: req.session.accessToken
+        id: req.session.id
       }
     })
 
     result = result ? {
       status: "success"
     } : {
-      status: "failure"
-    }
+        status: "failure"
+      }
 
     res.format({
 
@@ -88,6 +67,7 @@ router.get("/logout", async (req, res, next) => {
         res.json(result)
       }
     })
+
   } catch (Err) {
     next(Err)
   }
@@ -104,24 +84,24 @@ router.patch("/account", async (req, res, next) => {
     let changes = {}
     let where = {
       where: {
-        id: req.session.userId
+        id: req.user.id
       }
     }
 
     if (req.body.username) {
       const alreadyTaken = await db.User
-      .findOne({
-        where: {
-          username: req.body.username
-        }
-      })
-      const user = await db.User.findByPk(req.session.userId)
-      if (alreadyTaken && req.body.username !== user.username) {
+        .findOne({
+          where: {
+            username: req.body.username
+          }
+        })
+
+      if (alreadyTaken && req.body.username !== req.user.username) {
         throw new Error("Username already taken")
       }
       changes.username = req.body.username
     }
-    
+
     if (req.body.firstname) {
       changes.firstname = req.body.firstname
     }
@@ -142,8 +122,8 @@ router.patch("/account", async (req, res, next) => {
     result = result ? {
       status: "success"
     } : {
-      status: "failure"
-    }
+        status: "failure"
+      }
     res.format({
       html: () => {
         res.redirect('/account')
@@ -153,6 +133,7 @@ router.patch("/account", async (req, res, next) => {
         res.json(result)
       }
     })
+
   } catch (Err) {
     next(Err)
   }
@@ -165,7 +146,7 @@ router.patch("/account", async (req, res, next) => {
 router.delete("/account", async (req, res, next) => {
 
   try {
-    
+
     await db.Session.destroy({
       where: {
         accessToken: req.session.accessToken
@@ -174,15 +155,15 @@ router.delete("/account", async (req, res, next) => {
 
     let result = await db.User.destroy({
       where: {
-        id: req.session.userId
+        id: req.user.id
       }
     })
 
     result = result ? {
       status: "success"
     } : {
-      status: "failure"
-    }
+        status: "failure"
+      }
 
     res.format({
 
@@ -196,6 +177,7 @@ router.delete("/account", async (req, res, next) => {
         res.json(result)
       }
     })
+
   } catch (Err) {
     next(Err)
   }

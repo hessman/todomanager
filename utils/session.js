@@ -9,44 +9,41 @@ class Session {
   static async check(req, res, next) {
     /*
         Checks if there is a valid X-AccessToken in req.header or a AccessToken in req.cookies.
-        Pushes some info about the session into req.session.
+        Pushes some info about the session and the user into req.session and req.user.
     */
     try {
-      
-      let isConnected = false
-      let firstname
+
       let token
-      req.session = {}
+      req.session = null
+      req.user
 
       res.format({
 
         html: () => {
-          if (req.cookies.AccessToken !== undefined) {
+          if (req.cookies.AccessToken) {
             token = req.cookies.AccessToken
           }
         },
 
         json: () => {
-          if (req.header('X-AccessToken') !== undefined) {
+          if (req.header('X-AccessToken')) {
             token = req.header('X-AccessToken')
           }
         }
       })
 
-      if (token !== undefined && token !== null) {
-        let session = await db.Session.findOne({
+      if (token) {
+        const session = await db.Session.findOne({
           where: {
             accessToken: token
           }
         })
 
-        if (session !== null) {
-          session = session.dataValues
+        if (session) {
 
           if (session.expiresAt > new Date()) {
 
-            isConnected = true
-            req.session = session
+            req.session = session.dataValues
 
             const user = await db.User.findOne({
               where: {
@@ -54,7 +51,7 @@ class Session {
               }
             })
 
-            firstname = user.dataValues.firstname
+            req.user = user.dataValues
 
           } else {
 
@@ -68,8 +65,6 @@ class Session {
         }
       }
 
-      req.session.isConnected = isConnected
-      req.session.firstname = firstname
       next()
 
     } catch (Err) {
@@ -85,24 +80,26 @@ class Session {
     */
     try {
 
-      if (req.session.isConnected) {
+      if (req.session) {
+
         next()
-        return
+
+      } else {
+
+        res.format({
+
+          html: () => {
+            res.clearCookie('accessToken')
+            res.redirect('/login')
+          },
+
+          json: () => {
+            res.removeHeader('X-AccessToken')
+            throw new Error("Invalid X-AccessToken")
+          }
+        })
       }
 
-      res.format({
-
-        html: () => {
-          res.clearCookie('accessToken')
-          res.redirect('/login')
-        },
-
-        json: () => {
-          res.removeHeader('X-AccessToken')
-          throw new Error("Invalid X-AccessToken")
-        }
-      })
-      
     } catch (Err) {
       next(Err)
     }
